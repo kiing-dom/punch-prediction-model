@@ -22,6 +22,11 @@ def process_frame(frame):
 
 cap = cv2.VideoCapture(0)
 
+desired_width = 1280
+desired_height = 720
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
+
 while cap.isOpened():
     success, frame = cap.read()
     if not success:
@@ -29,7 +34,7 @@ while cap.isOpened():
     
     annotated_frame = process_frame(frame)
     
-    cv2.imshow('Pose Estimation', annotated_frame)
+    cv2.imshow('Boxing Pose Estimator', cv2.WINDOW_NORMAL)
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
