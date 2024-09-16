@@ -49,4 +49,8 @@ def main():
             pose_keypoints = extract_keypoints(results)
 
             #Log data
+            timestamp = datetime.now().strftime("%Y%m%d_%H$M$S.%f")
+            row = [timestamp] + list(pose_keypoints)
+            csv_writer.writerow(row)
+
             
