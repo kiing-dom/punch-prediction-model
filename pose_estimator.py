@@ -27,6 +27,8 @@ desired_height = 720
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
 
+cv2.namedWindow('Boxing Pose Estimator', cv2.WINDOW_NORMAL)
+
 while cap.isOpened():
     success, frame = cap.read()
     if not success:
@@ -34,7 +36,7 @@ while cap.isOpened():
     
     annotated_frame = process_frame(frame)
     
-    cv2.imshow('Boxing Pose Estimator', cv2.WINDOW_NORMAL)
+    cv2.imshow('Pose Estimation', annotated_frame)
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
