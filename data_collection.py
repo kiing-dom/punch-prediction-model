@@ -37,3 +37,16 @@ def main():
 
         header = ['timestamp'] + [f'keypoint_{i}_coord' for i in range(33) for coord in ['x', 'y', 'z', 'visibility']]
         csv_writer.writerow(header)
+
+        while cap.isOpened():
+            success, frame = cap.read()
+            if not success:
+                print("Ignoring empty camera frame.")
+                continue
+
+            results = process_frame(frame)
+
+            pose_keypoints = extract_keypoints(results)
+
+            #Log data
+            
