@@ -53,4 +53,16 @@ def main():
             row = [timestamp] + list(pose_keypoints)
             csv_writer.writerow(row)
 
-            
+            # Display the frame (optional)
+            mp.solutions.drawing_utils.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            cv2.imshow('Boxing Data Collection', frame)
+               
+            # Press 'q' to quit
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+       
+            cap.release()
+        cv2.destroyAllWindows()
+
+    if __name__ == "__main__":
+       main()
