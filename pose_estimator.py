@@ -22,6 +22,13 @@ def process_frame(frame):
 
 cap = cv2.VideoCapture(0)
 
+desired_width = 1280
+desired_height = 720
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
+
+cv2.namedWindow('Boxing Pose Estimator', cv2.WINDOW_NORMAL)
+
 while cap.isOpened():
     success, frame = cap.read()
     if not success:
