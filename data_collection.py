@@ -28,6 +28,7 @@ def extract_keypoints(results):
 def process_video(video_path, movement_type, output_dir):
     cap = cv2.VideoCapture(video_path)
     fps = cap.get(cv2.CAP_PROP_FPS)
+    print(f"Detected FPS: {fps}")
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     csv_filename = os.path.join(output_dir, f"boxing_data_{movement_type}_{timestamp}.csv")

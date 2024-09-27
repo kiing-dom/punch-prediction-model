@@ -1,0 +1,7 @@
+python data_collection.py videos/jab.MOV jab --output_dir data/processed
+python data_collection.py videos/cross.MOV cross --output_dir data/processed
+python data_collection.py videos/left-hook.MOV left-hook --output_dir data/processed
+python data_collection.py videos/right-hook.MOV right-hook --output_dir data/processed
+python data_collection.py videos/left-upper.MOV left-uppercut --output_dir data/processed
+python data_collection.py videos/right-upper.MOV right-uppercut --output_dir data/processed
+python data_collection.py videos/no-punches.MOV no-punches --output_dir data/processed
