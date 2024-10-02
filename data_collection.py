@@ -50,7 +50,7 @@ def process_video(video_path, movement_type, output_dir):
     with open(csv_filename, mode='w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
         
-        header = ['frame', 'timestamp', 'movement_type'] + [f'keypoint_{i}_{coord}' for i in range(33) for coord in ['x', 'y', 'z', 'visibility']]
+        header = ['frame', 'timestamp', 'movement_type'] + list(LANDMARKS.keys())
         csv_writer.writerow(header)
         
         frame_count = 0
@@ -60,10 +60,10 @@ def process_video(video_path, movement_type, output_dir):
                 break
             
             results = process_frame(frame)
-            pose_keypoints = extract_keypoints(results)
+            keypoints = extract_keypoints(results)
             
             timestamp = frame_count / fps
-            row = [frame_count, f"{timestamp:.3f}", movement_type] + list(pose_keypoints)
+            row = [frame_count, f"{timestamp:.3f}", movement_type] + list(keypoints.values())
             csv_writer.writerow(row)
             
             frame_count += 1
