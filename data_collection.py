@@ -13,6 +13,17 @@ pose = mp_pose.Pose(
     min_tracking_confidence=0.5
 )
 
+LANDMARKS = {
+    'left_shoulder': 11,
+    'right_shoulder': 12,
+    'left_elbow': 13,
+    'right_elbow': 14,
+    'left_wrist': 15,
+    'right_wrist': 16,
+    'left_hip': 23,
+    'right_hip': 24
+}
+
 def process_frame(frame):
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(rgb_frame)
@@ -20,10 +31,13 @@ def process_frame(frame):
 
 def extract_keypoints(results):
     if results.pose_landmarks:
-        pose = np.array([[lm.x, lm.y, lm.z, lm.visibility] for lm in results.pose_landmarks.landmark]).flatten()
+        keypoints = {}
+        for name, index in LANDMARKS.items():
+            lm = results.pose_landmarks.landmark[index]
+            keypoints[name] = f"{lm.x:.4f},{lm.y:.4f},{lm.z:.4f}"
     else:
-        pose = np.zeros(33*4)
-    return pose
+        keypoints = {name:"0,0,0" for name in LANDMARKS.keys()}
+    return keypoints
 
 def process_video(video_path, movement_type, output_dir):
     cap = cv2.VideoCapture(video_path)
@@ -36,7 +50,7 @@ def process_video(video_path, movement_type, output_dir):
     with open(csv_filename, mode='w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
         
-        header = ['frame', 'timestamp', 'movement_type'] + [f'keypoint_{i}_{coord}' for i in range(33) for coord in ['x', 'y', 'z', 'visibility']]
+        header = ['frame', 'timestamp', 'movement_type'] + list(LANDMARKS.keys())
         csv_writer.writerow(header)
         
         frame_count = 0
@@ -46,10 +60,10 @@ def process_video(video_path, movement_type, output_dir):
                 break
             
             results = process_frame(frame)
-            pose_keypoints = extract_keypoints(results)
+            keypoints = extract_keypoints(results)
             
             timestamp = frame_count / fps
-            row = [frame_count, f"{timestamp:.3f}", movement_type] + list(pose_keypoints)
+            row = [frame_count, f"{timestamp:.3f}", movement_type] + list(keypoints.values())
             csv_writer.writerow(row)
             
             frame_count += 1

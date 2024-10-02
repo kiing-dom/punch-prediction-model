@@ -18,8 +18,7 @@ def process_frame(frame):
         )
     return frame
 
-    # Capture video from camera or file input
-
+# Capture video from camera or file input
 cap = cv2.VideoCapture(0)
 
 desired_width = 1280
