@@ -13,6 +13,17 @@ pose = mp_pose.Pose(
     min_tracking_confidence=0.5
 )
 
+LANDMARKS = {
+    'left_shoulder': 11,
+    'right_shoulder': 12,
+    'left_elbow': 13,
+    'right_elbow': 14,
+    'left_wrist': 15,
+    'right_wrist': 16,
+    'left_hip': 23,
+    'right_hip': 24
+}
+
 def process_frame(frame):
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(rgb_frame)
