@@ -31,10 +31,13 @@ def process_frame(frame):
 
 def extract_keypoints(results):
     if results.pose_landmarks:
-        pose = np.array([[lm.x, lm.y, lm.z, lm.visibility] for lm in results.pose_landmarks.landmark]).flatten()
+        keypoints = {}
+        for name, index in LANDMARKS.items():
+            lm = results.pose_landmarks.landmark[index]
+            keypoints[name] = f"{lm.x:.4f},{lm.y:.4f},{lm.z:.4f}"
     else:
-        pose = np.zeros(33*4)
-    return pose
+        keypoints = {name:"0,0,0" for name in LANDMARKS.keys()}
+    return keypoints
 
 def process_video(video_path, movement_type, output_dir):
     cap = cv2.VideoCapture(video_path)
