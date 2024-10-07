@@ -1,4 +1,4 @@
 # Punch Prediction Model
-A computer vision project that analyzes a boxer's stance and movements to predict likely punches. It uses deep learning models to process video input, identifying movement patterns to forecast boxing moves. Designed for sports analytics, training improvement, and strategic insights in boxing.
 
-`still in the early stages of figuring things out, more progress coming soon`
+## Project Overview
+- The Punch Prediction Model is a computer vision-based project aimed at analyzing a boxer's stance and movements to predict the most likely punches they will throw next. By processing video inputs and using advanced deep learning techniques, the system will identify patterns in a boxer's movements to forecast specific boxing moves. This tool aims to be used for sports analytics, training improvement etc.
