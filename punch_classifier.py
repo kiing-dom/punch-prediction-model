@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import joblib
+from data_collection import LANDMARKS
 
 # loading the model and the scaler
 model = joblib.load('models/best_punch_prediction_model.joblib')
@@ -37,3 +38,18 @@ def compute_angle(a, b, c):
     return np.degrees(angle)
 
 def classify_punch(frame):
+    image = cv2.cvtColor(frame, cv2.COLOR_BGR)
+
+    results = pose.process(image)
+
+    if results.pose_landmarks:
+        features = extract_features(results.pose_landmarks.LANDMARKS)
+        scaled_features = scaler.transform(features)
+
+        prediction = model.predict(scaled_features)[0]
+        probabilities = model.predict_proba(scaled_features)[0]
+
+        return prediction, probabilities
+    
+    return None, None
+    
