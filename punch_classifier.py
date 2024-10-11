@@ -15,18 +15,36 @@ pose = mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5, min_t
 cap = cv2.VideoCapture(0)
 
 def extract_features(landmarks):
-    # Extract relevant landmarks and compute angles
+    # extract the relevant landmarks from the 33 available on mediapipe
+    relevant_landmarks = [
+            landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+            landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+            landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+            landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
+            landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value],
+            landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value],
+            landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+            landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
+    ]
+
     features = []
-    for landmark in [landmarks.left_shoulder, landmarks.right_shoulder, 
-                     landmarks.left_elbow, landmarks.right_elbow,
-                     landmarks.left_wrist, landmarks.right_wrist,
-                     landmarks.left_hip, landmarks.right_hip]:
+    for landmark in relevant_landmarks:
         features.extend([landmark.x, landmark.y, landmark.z])
-    
-    left_elbow_angle = compute_angle(landmarks.left_shoulder, landmarks.left_elbow, landmarks.left_wrist)
-    right_elbow_angle = compute_angle(landmarks.right_shoulder, landmarks.right_elbow, landmarks.right_wrist)
+
+    # compute angles
+    left_elbow_angle = compute_angle(
+        landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+        landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+        landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value]
+    )
+
+    right_elbow_angle = compute_angle(
+        landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+        landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
+        landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value]
+    )
     features.extend([left_elbow_angle, right_elbow_angle])
-    
+
     return np.array(features).reshape(1, -1)
 
 def compute_angle(a, b, c):
