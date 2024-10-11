@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import joblib
-from data_collection import LANDMARKS
+from collections import deque
 
 # loading the model and the scaler
 model = joblib.load('models/best_punch_prediction_model.joblib')
@@ -52,4 +52,21 @@ def classify_punch(frame):
         return prediction, probabilities
     
     return None, None
-    
+
+
+class PunchPredictor:
+    def __init__(self, sequence_length=5):
+        self.sequence_length = sequence_length
+        self.punch_history = deque(maxlen=sequence_length)
+        self.transition_matrix = {}
+
+    def update(self, punch):
+        if len(self.punch_history) == self.sequence_length:
+            sequence = tuple(self.punch_history)
+            if sequence not in self.transition_matrix:
+                self.transition_matrix[sequence] = {}
+            if punch not in self.transition_matrix[sequence]:
+                self.transition_matrix[sequence][punch] = 0
+            self.transition_matrix[sequence][punch] += 1
+
+        self.punch_history.append(punch)
