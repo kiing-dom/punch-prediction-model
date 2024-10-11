@@ -38,7 +38,7 @@ def compute_angle(a, b, c):
     return np.degrees(angle)
 
 def classify_punch(frame):
-    image = cv2.cvtColor(frame, cv2.COLOR_BGR)
+    image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     results = pose.process(image)
 
