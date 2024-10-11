@@ -43,7 +43,7 @@ def classify_punch(frame):
     results = pose.process(image)
 
     if results.pose_landmarks:
-        features = extract_features(results.pose_landmarks.LANDMARKS)
+        features = extract_features(results.pose_landmarks.landmark)
         scaled_features = scaler.transform(features)
 
         prediction = model.predict(scaled_features)[0]
