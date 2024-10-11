@@ -82,4 +82,41 @@ class PunchPredictor:
             return [p[0] for p in predictions[:top_n]]
         return []
 
-    punch_predictor = PunchPredictor()
+punch_predictor = PunchPredictor()
+
+def main():
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+    
+        # classify the current punch
+        punch, _ = classify_punch(frame)
+
+        if punch is not None:
+            # Updating the punch predictor
+            punch_predictor.update(punch)
+
+            # Get the 3 most likely Next Punches
+            next_punches = punch_predictor.predict_next(top_n=3)
+
+            # Display the Results on the UI
+            cv2.putText(frame, f"Current: {punch}", (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            
+            for i, next_punch in enumerate(next_punches):
+                cv2.putText(frame, f"Next {i + 1}: {next_punch}", (10, 60 + 30*i),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        
+        # Display the frame
+        cv2.imshow('Punch Classifier', frame)
+
+        # press 'q' to quit
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
