@@ -81,3 +81,5 @@ class PunchPredictor:
                                  key = lambda x: x[1], reverse=True)
             return [p[0] for p in predictions[:top_n]]
         return []
+
+    punch_predictor = PunchPredictor()
