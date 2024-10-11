@@ -43,7 +43,20 @@ def extract_features(landmarks):
         landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
         landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value]
     )
-    features.extend([left_elbow_angle, right_elbow_angle])
+
+    left_shoulder_angle = compute_angle(
+        landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value],
+        landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+        landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
+    )
+
+    right_shoulder_angle = compute_angle(
+        landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value],
+        landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+        landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
+    )
+
+    features.extend([left_elbow_angle, right_elbow_angle, left_shoulder_angle, right_shoulder_angle])
 
     return np.array(features).reshape(1, -1)
 
@@ -55,12 +68,20 @@ def compute_angle(a, b, c):
     angle = np.arccos(cosine_angle)
     return np.degrees(angle)
 
+def draw_landmarks(frame, landmarks):
+    # Draw the pose landmarks on the frame
+    mp_drawing = mp.solutions.drawing_utils
+    mp_drawing.draw_landmarks(frame, landmarks, mp_pose.POSE_CONNECTIONS)
+
 def classify_punch(frame):
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     results = pose.process(image)
 
     if results.pose_landmarks:
+        # Draw the landmarks on the frame
+        draw_landmarks(frame, results.pose_landmarks)
+
         features = extract_features(results.pose_landmarks.landmark)
         scaled_features = scaler.transform(features)
 
@@ -70,7 +91,6 @@ def classify_punch(frame):
         return prediction, probabilities
     
     return None, None
-
 
 class PunchPredictor:
     def __init__(self, sequence_length=5):
