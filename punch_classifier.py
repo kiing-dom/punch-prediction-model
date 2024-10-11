@@ -70,3 +70,14 @@ class PunchPredictor:
             self.transition_matrix[sequence][punch] += 1
 
         self.punch_history.append(punch)
+    
+    def predict_next(self, top_n=3):
+        if len(self.punch_history) < self.sequence_length:
+            return []
+
+        sequence = tuple(self.punch_history)
+        if sequence in self.transition_matrix:
+            predictions = sorted(self.transition_matrix[sequence].items(),
+                                 key = lambda x: x[1], reverse=True)
+            return [p[0] for p in predictions[:top_n]]
+        return []
